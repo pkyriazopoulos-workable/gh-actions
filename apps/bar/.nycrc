@@ -1,0 +1,9 @@
+{
+  "lines": 88,
+  "functions": 85,
+  "branches": 70,
+  "statements": 88,
+  "check-coverage": true,
+  "exclude": ["./dist", "node_modules"],
+  "reporter": ["lcov", "text-summary", "json"]
+}

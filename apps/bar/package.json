@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "clean": "rm -rf dist",
-    "start": "webpack serve --progress"
+    "start": "webpack serve --progress",
+    "test": "jest"
   },
   "dependencies": {
     "react": "16.14.0",
@@ -16,11 +17,14 @@
     "@babel/core": "7.20.5",
     "@babel/preset-env": "7.4.3",
     "@babel/preset-react": "7.0.0",
+    "@testing-library/react": "11.2.7",
     "babel-jest": "27.0.0",
     "babel-loader": "9.1.0",
     "css-loader": "1.0.1",
     "html-webpack-plugin": "5.1.0",
+    "jest": "27.0.0",
     "node-sass": "4.14.1",
+    "nyc": "15.1.0",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
     "webpack": "5.76.2",
