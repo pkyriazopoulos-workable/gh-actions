@@ -1,0 +1,15 @@
+{
+  "name": "gh-actions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --parallel run build",
+    "clean": "pnpm --parallel run clean",
+    "start": "pnpm --parallel run start",
+    "test": "pnpm --parallel run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

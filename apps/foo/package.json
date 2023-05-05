@@ -1,0 +1,30 @@
+{
+  "name": "foo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "clean": "rm -rf dist",
+    "start": "webpack serve --progress"
+  },
+  "dependencies": {
+    "react": "16.14.0",
+    "react-dom": "16.14.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.20.5",
+    "@babel/preset-env": "7.4.3",
+    "@babel/preset-react": "7.0.0",
+    "babel-jest": "27.0.0",
+    "babel-loader": "9.1.0",
+    "css-loader": "1.0.1",
+    "html-webpack-plugin": "5.1.0",
+    "node-sass": "4.14.1",
+    "sass-loader": "7.1.0",
+    "style-loader": "0.23.1",
+    "webpack": "5.76.2",
+    "webpack-cli": "4.10.0",
+    "webpack-dev-server": "4.5.0"
+  }
+}
