@@ -9,7 +9,7 @@ on:
         default: 'foo'
 run-name: "Apps: ${{ github.event.inputs.apps }}"
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.apps }}
   cancel-in-progress: true
 jobs:
   test:
