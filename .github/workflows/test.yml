@@ -4,20 +4,39 @@ on:
   workflow_dispatch:
     inputs:
       apps:
-        description: 'Apps to test'
+        description: Apps to test
         required: true
-        default: 'foo'
+        default: foo, bar
 run-name: "Apps: ${{ github.event.inputs.apps }}"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.apps }}
   cancel-in-progress: true
+
 jobs:
+  # We need to format the string of apps first, so we can use/reference
+  # the variable in the matrix strategy in the "test" job.
+  format-apps-string:
+    name: Format apps string
+    runs-on: ubuntu-latest
+    outputs:
+      APPS: ${{ steps.format-apps-string.outputs.FORMATTED_STRING }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - id: format-apps-string
+        uses: ./.github/actions/format-string-to-json-string
+        with:
+          string: ${{ github.event.inputs.apps }}
+          separator: ','
   test:
+    needs: format-apps-string
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        app: "[ ${{ github.event.inputs.apps }} ]"
+        app: ${{ fromJson(needs.format-apps-string.outputs.APPS) }}
     name: "Testing app: ${{ matrix.app }}"
     steps:
       - name: Get code
