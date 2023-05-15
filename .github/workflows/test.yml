@@ -14,6 +14,11 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        app: "[ ${{ github.event.inputs.apps }} ]"
+    name: "Testing app: ${{ matrix.app }}"
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -42,4 +47,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Test
-        run: pnpm -F ${{ github.event.inputs.apps }} run test:ci
+        run: pnpm -F ${{ matrix.app }} run test:ci
