@@ -7,7 +7,8 @@
     "build": "pnpm --parallel run build",
     "clean": "pnpm --parallel run clean",
     "start": "pnpm --parallel run start",
-    "test": "pnpm --parallel run test"
+    "test": "pnpm --parallel run test",
+    "test:ci": "pnpm --parallel run test:ci"
   },
   "keywords": [],
   "author": "",

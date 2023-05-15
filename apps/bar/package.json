@@ -7,7 +7,8 @@
     "build": "webpack",
     "clean": "rm -rf dist",
     "start": "webpack serve --progress",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --runInBand --ci --silent"
   },
   "dependencies": {
     "react": "16.14.0",
