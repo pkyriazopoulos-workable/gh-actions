@@ -1,0 +1,12 @@
+name: 'Build test scripts'
+description: 'Returns the test scripts for the apps in the PR prefix'
+inputs:
+  prefix:
+    description: 'The prefix to extract the apps from'
+    required: true
+outputs:
+  scripts:
+    description: 'The test scripts for the apps'
+runs:
+  using: 'node16'
+  main: 'index.js'

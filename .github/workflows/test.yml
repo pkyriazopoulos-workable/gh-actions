@@ -13,28 +13,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  get-apps-from-prefix:
-    name: Get apps from prefix
+  build-test-scripts:
+    name: Build test scripts
     runs-on: ubuntu-latest
     outputs:
-      apps: ${{ steps.get-apps-from-prefix.outputs.apps }}
+      scripts: ${{ steps.build-test-scripts.outputs.scripts }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - id: get-apps-from-prefix
-        uses: ./.github/actions/get-apps-from-prefix
+      - id: build-test-scripts
+        uses: ./.github/actions/build-test-scripts
         with:
           prefix: ${{ github.event.inputs.apps }}
   test:
-    needs: get-apps-from-prefix
+    needs: build-test-scripts
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        app: ${{ fromJson(needs.get-apps-from-prefix.outputs.apps) }}
-    name: "Testing app: ${{ matrix.app }}"
+        scripts: ${{ fromJson(needs.build-test-scripts.outputs.scripts) }}
+    name: ${{ matrix.scripts.name  }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -63,4 +63,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Test
-        run: pnpm -F ${{ matrix.app }} run test:ci
+        run: ${{ matrix.scripts.command }}

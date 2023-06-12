@@ -1,5 +1,5 @@
 const core = require("@actions/core");
-const allApps = require("./constants/apps");
+const { getAppsFromPrefix, buildScriptsArray } = require("./helpers");
 
 function run() {
   try {
@@ -10,14 +10,16 @@ function run() {
       return;
     }
 
-    if (prefix === "shared") {
-      core.setOutput("apps", allApps);
+    const apps = getAppsFromPrefix(prefix);
+
+    if (!apps) {
+      core.setFailed("Apps is empty");
       return;
     }
 
-    const apps = allApps.filter((app) => prefix.indexOf(app) > -1);
+    const scripts = buildScriptsArray(apps);
 
-    core.setOutput("apps", apps);
+    core.setOutput("scripts", scripts);
   } catch (error) {
     core.setFailed(error.message);
   }
