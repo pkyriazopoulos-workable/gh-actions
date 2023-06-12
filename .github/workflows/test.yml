@@ -9,34 +9,31 @@ on:
         default: foo, bar
 run-name: "Apps: ${{ github.event.inputs.apps }}"
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.apps }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # We need to format the string of apps first, so we can use/reference
-  # the variable in the matrix strategy in the "test" job.
-  format-apps-string:
-    name: Format apps string
+  get-apps-from-prefix:
+    name: Get apps from prefix
     runs-on: ubuntu-latest
     outputs:
-      APPS: ${{ steps.format-apps-string.outputs.FORMATTED_STRING }}
+      apps: ${{ steps.get-apps-from-prefix.outputs.apps }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - id: format-apps-string
-        uses: ./.github/actions/format-string-to-json-string
+      - id: get-apps-from-prefix
+        uses: ./.github/actions/get-apps-from-prefix
         with:
-          string: ${{ github.event.inputs.apps }}
-          separator: ','
+          prefix: ${{ github.event.inputs.apps }}
   test:
-    needs: format-apps-string
+    needs: get-apps-from-prefix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        app: ${{ fromJson(needs.format-apps-string.outputs.APPS) }}
+        app: ${{ fromJson(needs.get-apps-from-prefix.outputs.apps) }}
     name: "Testing app: ${{ matrix.app }}"
     steps:
       - name: Get code
