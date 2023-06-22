@@ -1,13 +1,7 @@
 name: Testing workflow
 on:
-  pull_request:
-  workflow_dispatch:
-    inputs:
-      apps:
-        description: Apps to test
-        required: true
-        default: foo, bar
-run-name: "Apps: ${{ github.event.inputs.apps }}"
+  push:
+run-name: "Apps: foo"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -26,7 +20,7 @@ jobs:
       - id: build-test-scripts
         uses: ./.github/actions/build-test-scripts
         with:
-          prefix: ${{ github.event.inputs.apps }}
+          prefix: foo
   test:
     needs: build-test-scripts
     runs-on: ubuntu-latest
@@ -64,3 +58,9 @@ jobs:
         run: pnpm install
       - name: Test
         run: ${{ matrix.scripts.command }}
+      - name: Upload coverage artifact
+        if: success() && matrix.scripts.coveragePath != ''
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ matrix.scripts.name }}
+          path: apps/foo/${{ matrix.scripts.coveragePath }}

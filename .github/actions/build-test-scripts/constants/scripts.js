@@ -1,14 +1,16 @@
 const scripts = {
   foo: [
     {
-      name: "foo simple",
+      name: "foo 1",
       command:
-        'NODE_OPTIONS="--max-old-space-size=4096" pnpm -F @workable/foo run test:simple --maxWorkers=4 --silent',
+        'NODE_OPTIONS="--max-old-space-size=4096" pnpm -F foo run test-1 --maxWorkers=4 --silent',
+      coveragePath: "coverage/1/",
     },
     {
-      name: "foo msw",
+      name: "foo 2",
       command:
-        'NODE_OPTIONS="--max-old-space-size=4096" pnpm -F @workable/foo run test:msw --maxWorkers=4 --silent',
+        'NODE_OPTIONS="--max-old-space-size=4096" pnpm -F foo run test-2 --maxWorkers=4 --silent',
+      coveragePath: "coverage/2/",
     },
   ],
 };

@@ -7,7 +7,7 @@ const config = {
     "\\.jsx?$": "babel-jest",
   },
   testPathIgnorePatterns: ["<rootDir>/jest/"],
-  collectCoverage: isCi,
+  collectCoverage: true,
   coverageDirectory: "<rootDir>/coverage/1",
   coverageReporters: ["text-summary", "lcov", "json"],
   transformIgnorePatterns: ["node_modules"],
