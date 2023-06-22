@@ -1,7 +1,7 @@
 name: Testing workflow
 on:
   push:
-run-name: "Apps: foo"
+run-name: "Apps: shared"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -11,7 +11,8 @@ jobs:
     name: Build test scripts
     runs-on: ubuntu-latest
     outputs:
-      scripts: ${{ steps.build-test-scripts.outputs.scripts }}
+      configs: ${{ steps.build-test-scripts.outputs.configs }}
+      apps-with-split-coverage: ${{ steps.build-test-scripts.outputs.apps-with-split-coverage }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -20,15 +21,15 @@ jobs:
       - id: build-test-scripts
         uses: ./.github/actions/build-test-scripts
         with:
-          prefix: foo
+          prefix: shared
   test:
     needs: build-test-scripts
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        scripts: ${{ fromJson(needs.build-test-scripts.outputs.scripts) }}
-    name: ${{ matrix.scripts.name  }}
+        config: ${{ fromJson(needs.build-test-scripts.outputs.configs) }}
+    name: ${{ matrix.config.name  }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -57,26 +58,34 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Test
-        run: ${{ matrix.scripts.command }}
+        run: ${{ matrix.config.command }}
       - name: Upload coverage artifact
-        if: success() && matrix.scripts.coveragePath != ''
+        if: success() && matrix.config.coveragePath != ''
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-${{ matrix.scripts.name }}
-          path: ${{ matrix.scripts.coveragePath }}
+          name: coverage-${{ matrix.config.app }}-${{ matrix.config.name }}
+          path: ${{ matrix.config.coveragePath }}
   merge-coverage-files:
-    name: Merge coverage files
-    needs: test
     if: needs.test.result == 'success'
+    needs: [build-test-scripts, test]
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        app: ${{ fromJson(needs.build-test-scripts.outputs.apps-with-split-coverage) }}
+    name: "Merge: ${{ matrix.app }}"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Merge coverage files
+      - name: Download coverage files
         uses: actions/download-artifact@v3
         with:
           path: coverage
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Merge coverage files
         run: |
-          npx istanbul-merge@1.1.1 --out coverage/coverage-final.json coverage/coverage-*/**
+          npx istanbul-merge@1.1.1 --out coverage/coverage-final.json coverage/coverage-${{ matrix.app }}-*/**
+      - name: Report coverage
+        run: |
           npx nyc@15.1.0 report -t coverage

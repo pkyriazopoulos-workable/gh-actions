@@ -1,7 +1,7 @@
 const apps = require("./apps");
-const scripts = require("./scripts");
+const config = require("./config");
 
 module.exports = {
   apps,
-  scripts,
+  config,
 };

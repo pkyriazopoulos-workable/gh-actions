@@ -1,4 +1,4 @@
-const scripts = {
+const config = {
   foo: [
     {
       name: "foo 1",
@@ -15,4 +15,4 @@ const scripts = {
   ],
 };
 
-module.exports = scripts;
+module.exports = config;

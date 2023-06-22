@@ -6,7 +6,7 @@ function getAppsFromPrefix(prefix) {
       return apps;
 
     default:
-      return apps.filter((app) => prefix.indexOf(app) > -1);
+      return prefix.split(",").filter((app) => apps.includes(app));
   }
 }
 

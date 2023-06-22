@@ -1,5 +1,9 @@
 const core = require("@actions/core");
-const { getAppsFromPrefix, buildScriptsArray } = require("./helpers");
+const {
+  getAppsFromPrefix,
+  getAppsWithSplitCoverage,
+  getConfigsForApps,
+} = require("./helpers");
 
 function run() {
   try {
@@ -10,16 +14,20 @@ function run() {
       return;
     }
 
-    const apps = getAppsFromPrefix(prefix);
+    const appsFromPrefix = getAppsFromPrefix(prefix);
 
-    if (!apps) {
-      core.setFailed("Apps is empty");
+    if (!appsFromPrefix) {
+      core.setFailed("Apps prefix is empty");
       return;
     }
 
-    const scripts = buildScriptsArray(apps);
+    const configsForApps = getConfigsForApps(appsFromPrefix);
+    const appsWithSplitCoverage = getAppsWithSplitCoverage(appsFromPrefix);
 
-    core.setOutput("scripts", scripts);
+    console.log("appsWithSplitCoverage", appsWithSplitCoverage);
+
+    core.setOutput("configs", configsForApps);
+    core.setOutput("apps-with-split-coverage", appsWithSplitCoverage);
   } catch (error) {
     core.setFailed(error.message);
   }

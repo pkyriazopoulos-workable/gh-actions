@@ -5,8 +5,10 @@ inputs:
     description: 'The prefix to extract the apps from'
     required: true
 outputs:
-  scripts:
-    description: 'The test scripts for the apps'
+  configs:
+    description: 'The configs for the apps in the PR prefix'
+  apps-with-split-coverage:
+    description: 'The apps in the PR prefix with split coverage'
 runs:
   using: 'node16'
   main: 'index.js'

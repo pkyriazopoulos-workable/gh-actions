@@ -1,9 +1,9 @@
 const getAppsFromPrefix = require("./getAppsFromPrefix");
-const getScriptsForApp = require("./getScriptsForApp");
-const buildScriptsArray = require("./buildScriptsArray");
+const getConfigsForApps = require("./getConfigsForApps");
+const getAppsWithSplitCoverage = require("./getAppsWithSplitCoverage");
 
 module.exports = {
   getAppsFromPrefix,
-  getScriptsForApp,
-  buildScriptsArray,
+  getConfigsForApps,
+  getAppsWithSplitCoverage,
 };
