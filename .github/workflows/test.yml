@@ -81,9 +81,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: apps/${{matrix.app}}/coverage
-      - name: Show coverage
-        run: ls -R
-        working-directory: coverage
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
