@@ -80,7 +80,10 @@ jobs:
       - name: Download coverage files
         uses: actions/download-artifact@v3
         with:
-          path: /coverage
+          path: coverage
+      - name: Show coverage
+        run: ls -R
+        working-directory: coverage
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
@@ -105,7 +108,7 @@ jobs:
         run: pnpm install
       - name: Merge coverage files
         run: |
-          pnpm -F ${{ matrix.app }} run merge-coverage-gha --out /coverage/coverage-final.json /coverage/coverage-${{ matrix.app }}-*/**
+          pnpm -F ${{ matrix.app }} run merge-coverage-gha --out coverage/coverage-final.json coverage/coverage-${{ matrix.app }}-*/**
       - name: Report coverage
         run: |
-          pnpm -F ${{ matrix.app }} run report-coverage-gha -t /coverage
+          pnpm -F ${{ matrix.app }} run report-coverage-gha -t/coverage
