@@ -80,7 +80,7 @@ jobs:
       - name: Download coverage files
         uses: actions/download-artifact@v3
         with:
-          path: coverage
+          path: /coverage
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
