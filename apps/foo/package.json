@@ -7,7 +7,7 @@
     "build": "webpack",
     "clean": "rm -rf dist",
     "start": "webpack serve --progress",
-    "merge-coverage-gha": "pnpm istanbul-merge -out coverage/coverage-final.json coverage/coverage-${{ matrix.app }}-*/**",
+    "merge-coverage-gha": "pnpm istanbul-merge -out coverage/coverage-final.json coverage/coverage-hris-*/**",
     "report-coverage-gha": "pnpm nyc report -t coverage",
     "test-1": "jest --config ./jest/config.1.js",
     "test-2": "jest --config ./jest/config.2.js",
