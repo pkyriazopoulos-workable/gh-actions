@@ -108,7 +108,9 @@ jobs:
         run: pnpm install
       - name: Merge coverage files
         run: |
+          echo ls
           pnpm -F ${{ matrix.app }} run merge-coverage-gha --out coverage/coverage-final.json coverage/coverage-${{ matrix.app }}-*/**
       - name: Report coverage
         run: |
+          echo ls 
           pnpm -F ${{ matrix.app }} run report-coverage-gha -t coverage
