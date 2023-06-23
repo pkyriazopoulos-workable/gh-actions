@@ -15,6 +15,7 @@ importers:
       babel-loader: 9.1.0
       css-loader: 1.0.1
       html-webpack-plugin: 5.1.0
+      istanbul-merge: 1.1.1
       jest: 27.0.0
       node-sass: 4.14.1
       nyc: 15.1.0
@@ -37,6 +38,7 @@ importers:
       babel-loader: 9.1.0_xzgpp4zl3rjatyzjz3j2jvzk2a
       css-loader: 1.0.1_webpack@5.76.2
       html-webpack-plugin: 5.1.0_webpack@5.76.2
+      istanbul-merge: 1.1.1
       jest: 27.0.0
       node-sass: 4.14.1
       nyc: 15.1.0
