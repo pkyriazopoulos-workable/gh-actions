@@ -80,7 +80,7 @@ jobs:
       - name: Download coverage files
         uses: actions/download-artifact@v3
         with:
-          path: coverage
+          path: apps/${{matrix.app}}/coverage
       - name: Show coverage
         run: ls -R
         working-directory: coverage
