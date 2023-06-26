@@ -1,0 +1,12 @@
+name: 'Get test scripts'
+description: 'Returns the test scripts for the given apps'
+inputs:
+  apps:
+    description: 'The apps to get the test scripts for'
+    required: true
+outputs:
+  scripts:
+    description: 'The test scripts for the given apps'
+runs:
+  using: 'node16'
+  main: 'index.js'

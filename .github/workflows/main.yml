@@ -25,6 +25,7 @@ jobs:
   test:
     name: Test
     needs: check-title
+    if: ${{ needs.check-title.result == 'success' && fromJson(needs.check-title.outputs.apps)[0] != null }}
     uses: ./.github/workflows/test.yml
     with:
       apps: ${{ needs.check-title.outputs.apps }}

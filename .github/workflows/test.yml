@@ -9,17 +9,32 @@ on:
         required: true
 
 jobs:
+  get-test-scripts:
+    name: Build test scripts
+    runs-on: ubuntu-latest
+    outputs:
+      scripts: ${{ steps.get-test-scripts.outputs.scripts }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Get test scripts
+        id: get-test-scripts
+        uses: ./.github/actions/get-test-scripts
+        with:
+          apps: ${{ inputs.apps }}
+
   test:
+    needs: get-test-scripts
 
     # In case of "misc", we don't want to run tests
-    if: ${{ fromJson(inputs.apps)[0] != null }}
+    if: ${{ fromJson(needs.get-test-scripts.outputs.scripts)[0] != null }}
 
     strategy:
       fail-fast: true
       matrix:
-          app: ${{ fromJson(inputs.apps) }}
+          appScript: ${{ fromJson(needs.get-test-scripts.outputs.scripts) }}
 
-    name: ${{ matrix.app }}
+    name: ${{ matrix.appScript.name }}
     runs-on: ubuntu-latest
 
     steps:
@@ -28,5 +43,6 @@ jobs:
         uses: actions/checkout@v3
 
       # Test
-      - name: Run test suite for app
-        uses: ./.github/actions/test
+      - name: Run script
+        run: |
+          ${{ matrix.appScript.script }}

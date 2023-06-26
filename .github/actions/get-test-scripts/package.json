@@ -1,5 +1,5 @@
 {
-  "name": "build-test-scripts",
+  "name": "get-test-commands",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
