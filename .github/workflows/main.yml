@@ -22,6 +22,6 @@ jobs:
         matrix:
           app: ${{ fromJson(github.event.inputs.apps) }}
 
-    uses: ./.github/workflows/test
+    uses: ./.github/workflows/test.yml
     with:
       app: ${{ needs.check-title.outputs.apps }}
