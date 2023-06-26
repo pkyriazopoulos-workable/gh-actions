@@ -1,113 +1,20 @@
-name: Testing workflow
-on:
-  push:
-run-name: "Apps: shared"
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+name: ☕ Test
+
+on: 
+  workflow_call:
+    inputs:
+      app: 
+        type: string
+        description: 'The app to test'
+        required: true
 
 jobs:
-  build-test-scripts:
-    name: Build test scripts
-    runs-on: ubuntu-latest
-    outputs:
-      configs: ${{ steps.build-test-scripts.outputs.configs }}
-      apps-with-split-coverage: ${{ steps.build-test-scripts.outputs.apps-with-split-coverage }}
-    steps:
-      - name: Get code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - id: build-test-scripts
-        uses: ./.github/actions/build-test-scripts
-        with:
-          prefix: shared
   test:
-    needs: build-test-scripts
+    name: Test ${{ github.event.inputs.app }}
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        config: ${{ fromJson(needs.build-test-scripts.outputs.configs) }}
-    name: ${{ matrix.config.name  }}
+
     steps:
-      - name: Get code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        id: pnpm-install
-        with:
-          version: 7
-          run_install: false
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Install dependencies
-        run: pnpm install
-      - name: Test
-        run: ${{ matrix.config.command }}
-      - name: Upload coverage artifact
-        if: success() && matrix.config.coveragePath != ''
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-${{ matrix.config.app }}-${{ matrix.config.name }}
-          path: ${{ matrix.config.coveragePath }}
-  merge-coverage-files:
-    if: needs.test.result == 'success'
-    needs: [build-test-scripts, test]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        app: ${{ fromJson(needs.build-test-scripts.outputs.apps-with-split-coverage) }}
-    name: "Merge: ${{ matrix.app }}"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Download coverage files
-        uses: actions/download-artifact@v3
-        with:
-          path: apps/${{matrix.app}}/coverage
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        id: pnpm-install
-        with:
-          version: 7
-          run_install: false
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Install dependencies
-        run: pnpm install
-      - name: Merge coverage files
-        run: |
-          echo ls
-          pnpm -F ${{ matrix.app }} run merge-coverage-gha
-      - name: Report coverage
-        run: |
-          echo ls 
-          pnpm -F ${{ matrix.app }} run report-coverage-gha 
+      - name: Setup
+        uses: ./.github/workflows/setup
+      - name: Run test suite for app
+        uses: ./.github/actions/test

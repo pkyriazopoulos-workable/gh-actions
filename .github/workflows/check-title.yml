@@ -1,0 +1,23 @@
+name: 🏷️ Check PR title
+
+on: 
+  workflow_call:
+    outputs:
+      apps:
+        description: 'Apps from PR title'
+        value: ${{ jobs.check-title.outputs.apps }}
+
+jobs:
+  check-title:
+    name: Check title
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.check-title.outputs.apps }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Check title
+        id: check-title
+        uses: ./.github/actions/check-pr-title
+        with:
+          pr-title: "shared: Test PR title"

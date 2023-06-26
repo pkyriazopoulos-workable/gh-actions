@@ -1,0 +1,12 @@
+name: 'Check PR title'
+description: 'Check if PR title is valid'
+inputs:
+  pr-title:
+    description: 'The PR title'
+    required: true
+outputs:
+  apps:
+    description: 'The PR apps'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

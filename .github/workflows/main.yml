@@ -1,0 +1,27 @@
+name: Main workflow
+
+on:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-title:
+    uses: ./.github/workflows/check-title.yml
+
+  test:
+    needs: check-title
+
+    # In case of "misc", we don't want to run tests
+    if: ${{ needs.check-title.outputs.apps[0] != null }}
+
+    strategy:
+        fail-fast: true
+        matrix:
+          app: ${{ fromJson(github.event.inputs.apps) }}
+
+    uses: ./.github/workflows/test
+    with:
+      app: ${{ needs.check-title.outputs.apps }}
