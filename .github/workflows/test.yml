@@ -27,10 +27,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Setup
-      - name: Setup
-        uses: ./.github/actions/setup
-
       # Test
       - name: Run test suite for app
         uses: ./.github/actions/test

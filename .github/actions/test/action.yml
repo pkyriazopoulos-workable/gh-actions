@@ -1,0 +1,35 @@
+name: 'Test app'
+description: 'Runs tests for the given app'
+inputs:
+  app:
+    description: 'The app to test'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    # Check if a custom action for the app exists
+    - name: Check if a custom job for the app is set up
+      id: check-if-action-for-app-exists
+      uses: ./.github/actions/check-if-action-for-app-exists
+      with:
+        app: ${{ inputs.app }}
+
+    - name: Execute custom job
+      needs: check-if-action-for-app-exists
+      if: ${{ needs.check-if-action-for-app-exists.outputs.exists == 'true' }}
+      uses: ./.github/actions/apps/${{ inputs.app }}
+
+    # Setup
+    - name: Setup
+      needs: check-if-action-for-app-exists
+      id: setup
+      if: ${{ needs.check-if-action-for-app-exists.outputs.exists == 'false' }}
+      uses: ./.github/actions/setup
+
+    # Run tests
+    - name: Run tests
+      needs: setup
+      shell: bash
+      run: |
+        NODE_OPTIONS="--max-old-space-size=4096" pnpm -F ${{ inputs.app }} run test-1 --maxWorkers=4 --silent
+
