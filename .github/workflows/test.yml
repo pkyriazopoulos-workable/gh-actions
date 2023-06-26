@@ -1,20 +1,36 @@
-name: ☕ Test
+name: Test
 
 on: 
   workflow_call:
     inputs:
-      app: 
+      apps: 
         type: string
-        description: 'The app to test'
+        description: 'The apps to test'
         required: true
 
 jobs:
   test:
-    name: Test ${{ github.event.inputs.app }}
+
+    # In case of "misc", we don't want to run tests
+    if: ${{ fromJson(inputs.apps)[0] != null }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+          app: ${{ fromJson(inputs.apps) }}
+
+    name: ${{ matrix.app }}
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Setup
       - name: Setup
-        uses: ./.github/workflows/setup
+        uses: ./.github/actions/setup
+
+      # Test
       - name: Run test suite for app
         uses: ./.github/actions/test

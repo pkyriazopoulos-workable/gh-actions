@@ -2,7 +2,7 @@ import { debug, getInput, setFailed } from "@actions/core";
 
 const getPrTitle = (): string | null => {
   try {
-    const title = getInput("title");
+    const title = getInput("pr-title");
     debug(`Title: ${title}`);
 
     if (typeof title !== "string") {

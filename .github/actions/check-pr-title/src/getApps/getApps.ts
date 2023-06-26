@@ -5,8 +5,12 @@ const getApps = async (): Promise<string[] | null> => {
   try {
     let apps: string[] = [];
 
-    const globber = await createGlob('./apps/**');
-    apps = await globber.glob();
+    const globber = await createGlob("./apps/*", {
+      implicitDescendants: false,
+    });
+
+    const appDirs = await globber.glob();
+    apps = appDirs.map((appDir) => appDir.split("/").pop() as string);
     debug(`Apps: ${apps}`);
 
     return apps;
