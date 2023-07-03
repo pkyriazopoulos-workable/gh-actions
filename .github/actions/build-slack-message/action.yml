@@ -1,0 +1,15 @@
+name: 'Build Slack message'
+description: 'Builds a Slack message from a template and posts it to a channel'
+inputs:
+  commit-message:
+    description: 'The commit message'
+    required: true
+  commit-url:
+    description: 'The commit URL'
+    required: true
+outputs:
+  payload:
+    description: 'The Slack message payload'
+runs:
+  using: 'node16'
+  main: 'index.js'

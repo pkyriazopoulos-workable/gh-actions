@@ -2,6 +2,8 @@ name: Main workflow
 
 on:
   push:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,11 +23,21 @@ jobs:
         uses: ./.github/actions/check-pr-title
         with:
           pr-title: "shared: Test PR title"
-
-  test:
-    name: Test
+  send-slack-message:
     needs: check-title
-    if: ${{ needs.check-title.result == 'success' && fromJson(needs.check-title.outputs.apps)[0] != null }}
-    uses: ./.github/workflows/test.yml
-    with:
-      apps: ${{ needs.check-title.outputs.apps }}
+    if: ${{ always() && needs.check-title.result != 'success' }}
+    name: Send slack message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build message
+        id: build-message
+        uses: ./.github/actions/build-slack-message
+        with:
+          commit-message: ${{ github.event.head_commit.message }}
+          commit-url: ${{ github.event.head_commit.url }}
+      - name: Send message
+        run: |
+          echo ${{ steps.build-message.outputs.payload }}
+
