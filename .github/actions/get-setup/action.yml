@@ -1,0 +1,9 @@
+name: 'Get setup'
+description: 'Returns the setup for the given app'
+inputs:
+  app:
+    description: 'The app to get the setup for'
+    required: true
+runs:
+  using: 'node16'
+  main: 'index.js'
