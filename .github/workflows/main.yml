@@ -1,6 +1,23 @@
 name: Main workflow
 
 on:
+  workflow_dispatch:
+    inputs:
+      staging:
+        description: "Staging"
+        type: boolean
+        required: true
+        default: true
+      staging10:
+        description: "Staging 10"
+        type: boolean
+        required: true
+        default: false
+      production:
+        description: "Production"
+        type: boolean
+        required: true
+        default: false
   push:
     branches:
       - main
@@ -40,4 +57,3 @@ jobs:
       - name: Send message
         run: |
           echo ${{ steps.build-message.outputs.payload }}
-
